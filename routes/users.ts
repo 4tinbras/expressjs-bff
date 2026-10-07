@@ -6,4 +6,4 @@ router.get('/users/', function(req: Request, res: Response, next) {
   res.send('respond with a resource');
 });
 
-module.exports = router;
+export default router;
