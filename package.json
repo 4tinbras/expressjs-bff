@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/www.js",
+    "start": "node dist/app.js",
     "dev": "nodemon bin/www.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
