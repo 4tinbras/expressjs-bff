@@ -1,7 +1,6 @@
 import {beforeAll, describe, expect, test} from 'vitest'
 import app from "../app";
 import http from "http";
-// import express, { type Express, type Request, type Response } from 'express';
 
 describe('Index page controller ', () => {
     let response: Response;
