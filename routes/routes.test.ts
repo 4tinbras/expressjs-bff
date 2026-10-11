@@ -1,12 +1,6 @@
-import {beforeAll, describe, it, expect, test, vi} from 'vitest'
-import * as index from './index'
-import router, {getHandler} from "./index";
-import express from "express";
+import {beforeAll, describe, expect, test} from 'vitest'
 import app from "../app";
 import http from "http";
-import server from "../bin/www";
-import path from "path";
-import cookieParser from "cookie-parser";
 // import express, { type Express, type Request, type Response } from 'express';
 
 describe('Index page controller ', () => {
@@ -31,5 +25,30 @@ describe('Index page controller ', () => {
 
     test('Should have html content', () => {
         expect(body).toContain("<!DOCTYPE html>");
+    });
+});
+
+describe('Users page controller ', () => {
+    let response: Response;
+    let body: Array<{ [key: string]: unknown }>;
+
+    beforeAll(async () => {
+        const serv = app;
+        app.set('port', 3040);
+        const server = http.createServer(serv);
+        server.listen(3040);
+
+        const url = `http://localhost:3040/users`;
+        response = await fetch(url);
+        // @ts-ignore
+        body = await response.text();
+    }, 3000);
+
+    test('Should have response status 200', () => {
+        expect(response.status).toBe(200);
+    });
+
+    test('Should have non-html content', () => {
+        expect(body).toContain('respond with a resource');
     });
 });
