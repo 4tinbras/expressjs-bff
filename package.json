@@ -1,17 +1,30 @@
 {
-  "name": "express-bff",
-  "version": "0.0.0",
-  "private": true,
+  "name": "expressjs-bff",
+  "version": "0.0.1",
+  "description": "",
+  "exports": "./dist/bin/www.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "build": "npx tsc",
+    "start": "node ./dist/bin/www.js",
+    "dev": "nodemon ./bin/www.ts",
+    "test": "vitest"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.3.1",
     "ejs": "^7.0.1",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
-    "morgan": "~1.9.1"
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "^5.0.3",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2",
+    "vitest": "^5.0.3"
   }
 }
