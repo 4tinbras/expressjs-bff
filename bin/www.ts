@@ -7,6 +7,7 @@
 import app from '../app';
 const debug = require('debug')('express-bff:server');
 import http from 'http';
+import router from "../routes";
 
 /**
  * Get port from environment and store in Express.
@@ -90,3 +91,5 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+export default server;
