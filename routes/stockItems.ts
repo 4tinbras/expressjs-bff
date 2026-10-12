@@ -20,15 +20,15 @@ const stockItem2: StockItem = {
 /* GET users listing. */
 router.get('/stock-items', function (req: Request, res: Response, next) {
 
-    res.send([stockItem1, stockItem2]);
+    res.json([stockItem1, stockItem2]);
 });
 
 /* GET users listing. */
 router.get('/stock-items/id/:itemId', function (req: Request<{ itemId: string }>, res: Response, next) {
     if (req.params.itemId === '1') {
-        res.send(stockItem1);
+        res.json(stockItem1);
     } else if (req.params.itemId === '2') {
-        res.send(stockItem2);
+        res.json(stockItem2);
     } else {
         res.status(404).send();
     }

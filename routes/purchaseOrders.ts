@@ -48,15 +48,15 @@ const purchaseOrder2: PurchaseOrder = {
 /* GET users listing. */
 router.get('/purchases', function (req: Request, res: Response, next) {
 
-    res.send([purchaseOrder1, purchaseOrder2]);
+    res.json([purchaseOrder1, purchaseOrder2]);
 });
 
 /* GET users listing. */
 router.get('/purchase/id/:purchaseId', function (req: Request<{ purchaseId: string }>, res: Response, next) {
     if (req.params.purchaseId === '1') {
-        res.send(purchaseOrder1);
+        res.json(purchaseOrder1);
     } else if (req.params.purchaseId === '2') {
-        res.send(purchaseOrder2);
+        res.json(purchaseOrder2);
     } else {
         res.status(404).send();
     }
