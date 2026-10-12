@@ -24,7 +24,7 @@ router.get('/stock-items', function (req: Request, res: Response, next) {
 });
 
 /* GET users listing. */
-router.get('/stock-items/id/:itemId', function (req: Request<{ itemId: string }>, res: Response, next) {
+router.get('/stock-item/id/:itemId', function (req: Request<{ itemId: string }>, res: Response, next) {
     if (req.params.itemId === '1') {
         res.json(stockItem1);
     } else if (req.params.itemId === '2') {
