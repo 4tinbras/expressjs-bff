@@ -179,7 +179,6 @@ describe('Users page controller ', () => {
         'should have response status 200' +
         'and contain list of items', async () => {
         response = await fetch(purchasesUrl);
-        // @ts-ignore
         const body: PurchaseOrder[] = await response.json();
 
         expect(response.status).toBe(200);
@@ -188,8 +187,7 @@ describe('Users page controller ', () => {
     test('When GET request to purchaseOrder' +
         'should have response status 200' +
         'and contain relevant record', async () => {
-        response = await fetch(purchasesUrl + '1');
-        // @ts-ignore
+        response = await fetch(purchaseUrlPrefix + '1');
         const body: PurchaseOrder = await response.json();
 
         expect(response.status).toBe(200);
