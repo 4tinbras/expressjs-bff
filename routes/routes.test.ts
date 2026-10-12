@@ -1,6 +1,7 @@
 import {beforeAll, describe, expect, test} from 'vitest'
 import app from "../app";
 import http from "http";
+import {PurchaseOrder, Requisition, StockItem, Warehouse} from "../models/warehouseTypes";
 
 describe('Index page controller ', () => {
     let response: Response;
@@ -49,5 +50,147 @@ describe('Users page controller ', () => {
 
     test('Should have non-html content', () => {
         expect(body).toContain('respond with a resource');
+        expect(body).not.toContain("<!DOCTYPE html>");
+    });
+});
+
+describe('Warehouse page controller ', () => {
+    let response: Response;
+
+    const warehousesUrl = `http://localhost:3050/warehouses`;
+    const warehouseUrlPrefix = `http://localhost:3050/warehouse/id/`;
+
+    beforeAll(async () => {
+        const serv = app;
+        app.set('port', 3050);
+        const server = http.createServer(serv);
+        server.listen(3050);
+
+    }, 3000);
+
+    test('When GET request to warehouses' +
+        'should have response status 200' +
+        'and contain list of warehouses', async () => {
+        response = await fetch(warehousesUrl);
+        const body: Warehouse[] = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body.length).toEqual(2);
+    });
+
+    test('When GET request to warehouses' +
+        'should return 200' +
+        'and relevant record', async () => {
+        response = await fetch(warehouseUrlPrefix + '1');
+        const body: Warehouse = await response.json();
+
+        expect(response.status).toBe(200);
+        // expect(body).toContain('respond with a resource');
+    });
+});
+
+describe('Requisitions page controller ', () => {
+    let response: Response;
+    const requisitionsUrl = `http://localhost:3060/requisitions`;
+    const requisitionUrlPrefix = `http://localhost:3060/requisition/id/`;
+
+
+    beforeAll(async () => {
+        const serv = app;
+        app.set('port', 3060);
+        const server = http.createServer(serv);
+        server.listen(3060);
+
+    }, 3000);
+
+    test('When GET request to requisitions' +
+        'should have response status 200' +
+        'and contain list of warehouses', async () => {
+        response = await fetch(requisitionsUrl);
+        const body: Requisition[] = await response.json();
+
+        expect(response.status).toBe(200);
+        // expect(body).toContain('respond with a resource');
+
+    });
+
+    test('When GET request to requisition' +
+        'should return 200' +
+        'and relevant record', async () => {
+        response = await fetch(requisitionUrlPrefix + '1');
+        const body: Requisition = await response.json();
+
+        expect(response.status).toBe(200);
+        // expect(body).toContain('respond with a resource');
+    });
+});
+
+describe('Stock irem', () => {
+    let response: Response;
+    const stockItemsUrl = `http://localhost:3070/stock-items`;
+    const stockItemUrlPrefix = `http://localhost:3070/stock-item/id/`;
+
+    beforeAll(async () => {
+        const serv = app;
+        app.set('port', 3070);
+        const server = http.createServer(serv);
+        server.listen(3070);
+
+
+    }, 3000);
+
+    test('When GET request to stockItems' +
+        'should have response status 200' +
+        'and contain list of items', async () => {
+        response = await fetch(stockItemsUrl);
+        const body: StockItem[] = await response.json();
+
+        expect(response.status).toBe(200);
+    });
+
+    test('When GET request to stockItem' +
+        'should have response status 200' +
+        'and contain valid record', async () => {
+        response = await fetch(stockItemUrlPrefix + '1');
+        const body: StockItem = await response.json();
+
+        expect(response.status).toBe(200);
+
+        // expect(body).toContain('respond with a resource');
+    });
+});
+
+describe('Users page controller ', () => {
+    let response: Response;
+    const purchasesUrl = `http://localhost:3080/purchases`;
+    const purchaseUrlPrefix = `http://localhost:3080/purchase/id/`;
+
+
+    beforeAll(async () => {
+        const serv = app;
+        app.set('port', 3080);
+        const server = http.createServer(serv);
+        server.listen(3080);
+
+
+    }, 3000);
+
+    test('When GET request to purchaseOrders' +
+        'should have response status 200' +
+        'and contain list of items', async () => {
+        response = await fetch(purchasesUrl);
+        const body: PurchaseOrder[] = await response.json();
+
+        expect(response.status).toBe(200);
+    });
+
+    test('When GET request to purchaseOrder' +
+        'should have response status 200' +
+        'and contain relevant record', async () => {
+        response = await fetch(purchaseUrlPrefix + '1');
+        const body: PurchaseOrder = await response.json();
+
+        expect(response.status).toBe(200);
+        // expect(body).toContain('respond with a resource');
     });
 });

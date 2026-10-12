@@ -1,10 +1,14 @@
 import createError from 'http-errors';
-import express, { type Express, type Request, type Response } from 'express';
+import express, {type Request, type Response} from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 
 import indexRouter from './routes';
 import usersRouter from './routes/users';
+import warehousesRouter from './routes/warehouses';
+import requisitionsRouter from './routes/requisitions';
+import stockItemsRouter from './routes/stockItems';
+import purchaseOrderRouter from './routes/purchaseOrders';
 
 const app = express();
 
@@ -19,6 +23,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/', warehousesRouter);
+app.use('/', requisitionsRouter);
+app.use('/', stockItemsRouter);
+app.use('/', purchaseOrderRouter);
 
 // catch 404 and forward to error.ejs handler
 app.use(function(req, res, next) {
