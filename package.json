@@ -7,7 +7,8 @@
     "build": "npx tsc",
     "start": "node ./dist/bin/www.js",
     "dev": "nodemon ./bin/www.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest --coverage.enabled"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
