@@ -1,9 +1,16 @@
 import {IPurchaseItem, IPurchaseOrder, IRequisition, IStockItem, IWarehouse} from "../models/warehouseTypes";
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
+@Entity()
 export class Warehouse implements IWarehouse {
+
+    @PrimaryGeneratedColumn()
     id: number;
+    @Column({type: "string"})
     name: string;
+    @Column({type: "string"})
     location: string;
+    @OneToMany(() => StockItem, stock => stock.warehouse)
     availableStock: IStockItem[];
 
     constructor(id: number, name: string, location: string, availableStock: IStockItem[]) {
@@ -29,11 +36,15 @@ export class StockItem implements IStockItem {
     singleItemPrice: number;
     quantity: number;
 
-    constructor(stockId: number, name: string, singleItemPrice: number, quantity: number) {
+    @ManyToOne(() => Warehouse, (warehouse) => warehouse.availableStock)
+    warehouse: IWarehouse;
+
+    constructor(stockId: number, name: string, singleItemPrice: number, quantity: number, warehouse: IWarehouse) {
         this.stockId = stockId;
         this.name = name;
         this.singleItemPrice = singleItemPrice;
         this.quantity = quantity;
+        this.warehouse = warehouse;
     }
 
 }
@@ -43,10 +54,14 @@ export class PurchaseItem implements IPurchaseItem {
     quantity: number;
     partialPrice: number;
 
-    constructor(stockId: number, quantity: number) {
+    @ManyToOne(() => PurchaseOrder, (purchaseOrder) => purchaseOrder.purchaseItems)
+    purchaseOrder: IPurchaseOrder;
+
+    constructor(stockId: number, quantity: number, purchaseOrder: IPurchaseOrder) {
         this.stockId = stockId;
         this.quantity = quantity;
         this.partialPrice = 0;
+        this.purchaseOrder = purchaseOrder;
     }
 
     calculatePartialPrice(): number {
@@ -56,6 +71,7 @@ export class PurchaseItem implements IPurchaseItem {
 
 export class PurchaseOrder implements IPurchaseOrder {
     transactionId: number;
+    @OneToMany(() => PurchaseItem, (item) => item.purchaseOrder)
     purchaseItems: PurchaseItem[];
     totalPrice: number;
     madeOn: number;
