@@ -1,7 +1,9 @@
 import {beforeAll, describe, expect, test} from 'vitest'
 import app from "../app";
 import http from "http";
-import {PurchaseOrder, Requisition, StockItem, Warehouse} from "../models/warehouseTypes";
+import {IPurchaseOrder, IRequisition, IStockItem, IWarehouse} from "../models/warehouseTypes";
+import {Warehouse} from "../persistence/entities";
+import {MockTypeORM} from 'mock-typeorm'
 
 describe('Index page controller ', () => {
     let response: Response;
@@ -60,11 +62,28 @@ describe('Warehouse page controller ', () => {
     const warehousesUrl = `http://localhost:3050/warehouses`;
     const warehouseUrlPrefix = `http://localhost:3050/warehouse/id/`;
 
+    const warehouse1: Warehouse = {
+        availableStock: [],
+        id: 1,
+        location: "",
+        name: "",
+    }
+    const warehouse2: Warehouse = {
+        availableStock: [],
+        id: 2,
+        location: "",
+        name: "",
+    }
+
     beforeAll(async () => {
         const serv = app;
         app.set('port', 3050);
         const server = http.createServer(serv);
         server.listen(3050);
+
+        const ormMock = new MockTypeORM();
+        ormMock.onMock('Warehouse').toReturn([warehouse1, warehouse2], 'find');
+        ormMock.onMock('Warehouse').toReturn(warehouse1, 'findOne');
 
     }, 3000);
 
@@ -72,7 +91,7 @@ describe('Warehouse page controller ', () => {
         'should have response status 200' +
         'and contain list of warehouses', async () => {
         response = await fetch(warehousesUrl);
-        const body: Warehouse[] = await response.json();
+        const body: IWarehouse[] = await response.json();
 
         expect(response.status).toBe(200);
         expect(body.length).toEqual(2);
@@ -82,7 +101,7 @@ describe('Warehouse page controller ', () => {
         'should return 200' +
         'and relevant record', async () => {
         response = await fetch(warehouseUrlPrefix + '1');
-        const body: Warehouse = await response.json();
+        const body: IWarehouse = await response.json();
 
         expect(response.status).toBe(200);
         // expect(body).toContain('respond with a resource');
@@ -107,7 +126,7 @@ describe('Requisitions page controller ', () => {
         'should have response status 200' +
         'and contain list of warehouses', async () => {
         response = await fetch(requisitionsUrl);
-        const body: Requisition[] = await response.json();
+        const body: IRequisition[] = await response.json();
 
         expect(response.status).toBe(200);
         // expect(body).toContain('respond with a resource');
@@ -118,7 +137,7 @@ describe('Requisitions page controller ', () => {
         'should return 200' +
         'and relevant record', async () => {
         response = await fetch(requisitionUrlPrefix + '1');
-        const body: Requisition = await response.json();
+        const body: IRequisition = await response.json();
 
         expect(response.status).toBe(200);
         // expect(body).toContain('respond with a resource');
@@ -143,7 +162,7 @@ describe('Stock irem', () => {
         'should have response status 200' +
         'and contain list of items', async () => {
         response = await fetch(stockItemsUrl);
-        const body: StockItem[] = await response.json();
+        const body: IStockItem[] = await response.json();
 
         expect(response.status).toBe(200);
     });
@@ -152,7 +171,7 @@ describe('Stock irem', () => {
         'should have response status 200' +
         'and contain valid record', async () => {
         response = await fetch(stockItemUrlPrefix + '1');
-        const body: StockItem = await response.json();
+        const body: IStockItem = await response.json();
 
         expect(response.status).toBe(200);
 
@@ -179,7 +198,7 @@ describe('Users page controller ', () => {
         'should have response status 200' +
         'and contain list of items', async () => {
         response = await fetch(purchasesUrl);
-        const body: PurchaseOrder[] = await response.json();
+        const body: IPurchaseOrder[] = await response.json();
 
         expect(response.status).toBe(200);
     });
@@ -188,7 +207,7 @@ describe('Users page controller ', () => {
         'should have response status 200' +
         'and contain relevant record', async () => {
         response = await fetch(purchaseUrlPrefix + '1');
-        const body: PurchaseOrder = await response.json();
+        const body: IPurchaseOrder = await response.json();
 
         expect(response.status).toBe(200);
         // expect(body).toContain('respond with a resource');
