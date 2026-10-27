@@ -83,7 +83,7 @@ describe('Warehouse page controller ', () => {
 
         const ormMock = new MockTypeORM();
         ormMock.onMock('Warehouse').toReturn([warehouse1, warehouse2], 'find');
-        ormMock.onMock('Warehouse').toReturn(warehouse1, 'findOne');
+        ormMock.onMock('Warehouse').toReturn(warehouse1, 'findOneBy');
 
     }, 3000);
 
@@ -95,6 +95,7 @@ describe('Warehouse page controller ', () => {
 
         expect(response.status).toBe(200);
         expect(body.length).toEqual(2);
+        expect(body).toEqual([warehouse1, warehouse2]);
     });
 
     test('When GET request to warehouses' +
@@ -104,7 +105,7 @@ describe('Warehouse page controller ', () => {
         const body: IWarehouse = await response.json();
 
         expect(response.status).toBe(200);
-        // expect(body).toContain('respond with a resource');
+        expect(body).toEqual(warehouse1);
     });
 });
 
