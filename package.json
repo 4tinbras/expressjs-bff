@@ -7,21 +7,29 @@
     "build": "npx tsc",
     "start": "node ./dist/bin/www.js",
     "dev": "nodemon ./bin/www.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest --coverage.enabled"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.3.1",
     "ejs": "^7.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.23.1",
+    "postgresql": "^0.0.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^1.1.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
+    "@types/sinon": "^22.0.2",
     "@vitest/coverage-v8": "^5.0.3",
     "@vitest/eslint-plugin": "^1.6.27",
+    "mock-typeorm": "^1.0.4",
     "nodemon": "^3.1.14",
+    "sinon": "^22.1.0",
     "supertest": "^7.3.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2",

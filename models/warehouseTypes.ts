@@ -2,18 +2,18 @@ enum WarehouseTypesDiscriminator {
     StockItem = 'StockItem',
 }
 
-export interface Warehouse {
+export interface IWarehouse {
     id: number;
     name: string;
     location: string;
-    availableStock: StockItem[];
+    availableStock: IStockItem[];
 
-    requestSupplies(): Requisition;
+    requestSupplies(): IRequisition;
 
-    acceptPurchase(): PurchaseOrder;
+    acceptPurchase(): IPurchaseOrder;
 }
 
-export interface StockItem {
+export interface IStockItem {
     readonly discriminator?: WarehouseTypesDiscriminator.StockItem;
     stockId: number;
     name: string;
@@ -21,7 +21,7 @@ export interface StockItem {
     quantity: number;
 }
 
-export interface PurchaseItem {
+export interface IPurchaseItem {
     stockId: number;
     quantity: number;
     partialPrice: number;
@@ -29,18 +29,18 @@ export interface PurchaseItem {
     calculatePartialPrice(): number;
 }
 
-export interface PurchaseOrder {
+export interface IPurchaseOrder {
     transactionId: number;
-    purchaseItems: PurchaseItem[];
+    purchaseItems: IPurchaseItem[];
     totalPrice: number;
     madeOn: number;
 
     calculateTotalPrice(): number;
 }
 
-export interface Requisition {
+export interface IRequisition {
     id: number;
-    requestedStock: StockItem[];
+    requestedStock: IStockItem[];
     totalValue: number;
     fulfilledOn: number;
 }
