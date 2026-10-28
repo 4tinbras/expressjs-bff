@@ -57,7 +57,7 @@ describe('Users page controller ', () => {
     });
 });
 
-describe('Warehouse page controller ', () => {
+describe('Application ', () => {
     let response: Response;
 
     const warehousesUrl = `http://localhost:3050/warehouses`;
@@ -76,44 +76,8 @@ describe('Warehouse page controller ', () => {
         name: "",
     }
 
-    beforeAll(async () => {
-        const serv = app;
-        app.set('port', 3050);
-        const server = http.createServer(serv);
-        server.listen(3050);
-
-        const ormMock = new MockTypeORM();
-        ormMock.onMock('Warehouse').toReturn([warehouse1, warehouse2], 'find');
-        ormMock.onMock('Warehouse').toReturn(warehouse1, 'findOneBy');
-
-    }, 3000);
-
-    test('When GET request to warehouses' +
-        'should have response status 200' +
-        'and contain list of warehouses', async () => {
-        response = await fetch(warehousesUrl);
-        const body: IWarehouse[] = await response.json();
-
-        expect(response.status).toBe(200);
-        expect(body.length).toEqual(2);
-        expect(body).toEqual([warehouse1, warehouse2]);
-    });
-
-    test('When GET request to warehouses' +
-        'should return 200' +
-        'and relevant record', async () => {
-        response = await fetch(warehouseUrlPrefix + '1');
-        const body: IWarehouse = await response.json();
-
-        expect(response.status).toBe(200);
-        expect(body).toEqual(warehouse1);
-    });
-});
-
-describe('Requisitions page controller ', () => {
-    let response: Response;
-    const requisitionsUrl = `http://localhost:3060/requisitions`;
-    const requisitionUrlPrefix = `http://localhost:3060/requisition/id/`;
+    const requisitionsUrl = `http://localhost:3050/requisitions`;
+    const requisitionUrlPrefix = `http://localhost:3050/requisition/id/`;
 
     const requisition1: Requisition = {
         fulfilledOn: Date.now(),
@@ -131,44 +95,8 @@ describe('Requisitions page controller ', () => {
 
     }
 
-    beforeAll(async () => {
-        const serv = app;
-        app.set('port', 3060);
-        const server = http.createServer(serv);
-        server.listen(3060);
-
-        const ormMock = new MockTypeORM();
-        ormMock.onMock('Requisition').toReturn([requisition1, requisition2], 'find');
-        ormMock.onMock('Requisition').toReturn(requisition1, 'findOneBy');
-
-    }, 3000);
-
-    test('When GET request to requisitions' +
-        'should have response status 200' +
-        'and contain list of warehouses', async () => {
-        response = await fetch(requisitionsUrl);
-        const body: IRequisition[] = await response.json();
-
-        expect(response.status).toBe(200);
-        expect(body).toEqual([requisition1, requisition2]);
-
-    });
-
-    test('When GET request to requisition' +
-        'should return 200' +
-        'and relevant record', async () => {
-        response = await fetch(requisitionUrlPrefix + '1');
-        const body: IRequisition = await response.json();
-
-        expect(response.status).toBe(200);
-        expect(body).toEqual(requisition1);
-    });
-});
-
-describe('Stock item', () => {
-    let response: Response;
-    const stockItemsUrl = `http://localhost:3070/stock-items`;
-    const stockItemUrlPrefix = `http://localhost:3070/stock-item/id/`;
+    const stockItemsUrl = `http://localhost:3050/stock-items`;
+    const stockItemUrlPrefix = `http://localhost:3050/stock-item/id/`;
 
     const stockItem1: StockItem = {
         name: "",
@@ -184,43 +112,8 @@ describe('Stock item', () => {
         stockId: 2
     }
 
-    beforeAll(async () => {
-        const serv = app;
-        app.set('port', 3070);
-        const server = http.createServer(serv);
-        server.listen(3070);
-
-        const ormMock = new MockTypeORM();
-        ormMock.onMock('StockItem').toReturn([stockItem1, stockItem2], 'find');
-        ormMock.onMock('StockItem').toReturn(stockItem1, 'findOneBy');
-
-    }, 3000);
-
-    test('When GET request to stockItems' +
-        'should have response status 200' +
-        'and contain list of items', async () => {
-        response = await fetch(stockItemsUrl);
-        const body: IStockItem[] = await response.json();
-
-        expect(response.status).toBe(200);
-        expect(body).toEqual([stockItem1, stockItem2]);
-    });
-
-    test('When GET request to stockItem' +
-        'should have response status 200' +
-        'and contain valid record', async () => {
-        response = await fetch(stockItemUrlPrefix + '1');
-        const body: IStockItem = await response.json();
-
-        expect(response.status).toBe(200);
-        expect(body).toEqual(stockItem1);
-    });
-});
-
-describe('Purchases page controller ', () => {
-    let response: Response;
-    const purchasesUrl = `http://localhost:3080/purchases`;
-    const purchaseUrlPrefix = `http://localhost:3080/purchase/id/`;
+    const purchasesUrl = `http://localhost:3050/purchases`;
+    const purchaseUrlPrefix = `http://localhost:3050/purchase/id/`;
 
     const purchaseItem1: PurchaseItem = {
         partialPrice: 0,
@@ -248,17 +141,89 @@ describe('Purchases page controller ', () => {
         totalPrice: 0,
     }
 
+
     beforeAll(async () => {
         const serv = app;
-        app.set('port', 3080);
+        app.set('port', 3050);
         const server = http.createServer(serv);
-        server.listen(3080);
+        server.listen(3050);
 
         const ormMock = new MockTypeORM();
+        ormMock.onMock('Warehouse').toReturn([warehouse1, warehouse2], 'find');
+        ormMock.onMock('Warehouse').toReturn(warehouse1, 'findOneBy');
+
+        ormMock.onMock('Requisition').toReturn([requisition1, requisition2], 'find');
+        ormMock.onMock('Requisition').toReturn(requisition1, 'findOneBy');
+
+        ormMock.onMock('StockItem').toReturn([stockItem1, stockItem2], 'find');
+        ormMock.onMock('StockItem').toReturn(stockItem1, 'findOneBy');
+
         ormMock.onMock('PurchaseOrder').toReturn([purchaseOrder1, purchaseOrder2], 'find');
         ormMock.onMock('PurchaseOrder').toReturn(purchaseOrder1, 'findOneBy');
 
     }, 3000);
+
+    test('When GET request to warehouses' +
+        'should have response status 200' +
+        'and contain list of warehouses', async () => {
+        response = await fetch(warehousesUrl);
+        const body: IWarehouse[] = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body.length).toEqual(2);
+        expect(body).toEqual([warehouse1, warehouse2]);
+    });
+
+    test('When GET request to warehouses' +
+        'should return 200' +
+        'and relevant record', async () => {
+        response = await fetch(warehouseUrlPrefix + '1');
+        const body: IWarehouse = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body).toEqual(warehouse1);
+    });
+
+    test('When GET request to requisitions' +
+        'should have response status 200' +
+        'and contain list of warehouses', async () => {
+        response = await fetch(requisitionsUrl);
+        const body: IRequisition[] = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body).toEqual([requisition1, requisition2]);
+
+    });
+
+    test('When GET request to requisition' +
+        'should return 200' +
+        'and relevant record', async () => {
+        response = await fetch(requisitionUrlPrefix + '1');
+        const body: IRequisition = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body).toEqual(requisition1);
+    });
+
+    test('When GET request to stockItems' +
+        'should have response status 200' +
+        'and contain list of items', async () => {
+        response = await fetch(stockItemsUrl);
+        const body: IStockItem[] = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body).toEqual([stockItem1, stockItem2]);
+    });
+
+    test('When GET request to stockItem' +
+        'should have response status 200' +
+        'and contain valid record', async () => {
+        response = await fetch(stockItemUrlPrefix + '1');
+        const body: IStockItem = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body).toEqual(stockItem1);
+    });
 
     test('When GET request to purchaseOrders' +
         'should have response status 200' +
