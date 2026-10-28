@@ -2,8 +2,9 @@ import {beforeAll, describe, expect, test} from 'vitest'
 import app from "../app";
 import http from "http";
 import {IPurchaseOrder, IRequisition, IStockItem, IWarehouse, Requisition} from "../models/warehouseTypes";
-import {PurchaseItem, PurchaseOrder, Warehouse} from "../persistence/entities";
+import {PurchaseItem, PurchaseOrder, StockItem, Warehouse} from "../persistence/entities";
 import {MockTypeORM} from 'mock-typeorm'
+import type {Response} from "express";
 
 describe('Index page controller ', () => {
     let response: Response;
@@ -169,12 +170,29 @@ describe('Stock item', () => {
     const stockItemsUrl = `http://localhost:3070/stock-items`;
     const stockItemUrlPrefix = `http://localhost:3070/stock-item/id/`;
 
+    const stockItem1: StockItem = {
+        name: "",
+        quantity: 1,
+        singleItemPrice: 1,
+        stockId: 1
+    }
+
+    const stockItem2: StockItem = {
+        name: "",
+        quantity: 2,
+        singleItemPrice: 2,
+        stockId: 2
+    }
+
     beforeAll(async () => {
         const serv = app;
         app.set('port', 3070);
         const server = http.createServer(serv);
         server.listen(3070);
 
+        const ormMock = new MockTypeORM();
+        ormMock.onMock('StockItem').toReturn([stockItem1, stockItem2], 'find');
+        ormMock.onMock('StockItem').toReturn(stockItem1, 'findOneBy');
 
     }, 3000);
 
@@ -185,6 +203,7 @@ describe('Stock item', () => {
         const body: IStockItem[] = await response.json();
 
         expect(response.status).toBe(200);
+        expect(body).toEqual([stockItem1, stockItem2]);
     });
 
     test('When GET request to stockItem' +
@@ -194,8 +213,7 @@ describe('Stock item', () => {
         const body: IStockItem = await response.json();
 
         expect(response.status).toBe(200);
-
-        // expect(body).toContain('respond with a resource');
+        expect(body).toEqual(stockItem1);
     });
 });
 
