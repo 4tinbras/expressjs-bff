@@ -2,7 +2,7 @@ import {beforeAll, describe, expect, test} from 'vitest'
 import app from "../app";
 import http from "http";
 import {IPurchaseOrder, IRequisition, IStockItem, IWarehouse, Requisition} from "../models/warehouseTypes";
-import {Warehouse} from "../persistence/entities";
+import {PurchaseItem, PurchaseOrder, Warehouse} from "../persistence/entities";
 import {MockTypeORM} from 'mock-typeorm'
 
 describe('Index page controller ', () => {
@@ -199,11 +199,36 @@ describe('Stock item', () => {
     });
 });
 
-describe('Users page controller ', () => {
+describe('Purchases page controller ', () => {
     let response: Response;
     const purchasesUrl = `http://localhost:3080/purchases`;
     const purchaseUrlPrefix = `http://localhost:3080/purchase/id/`;
 
+    const purchaseItem1: PurchaseItem = {
+        partialPrice: 0,
+        quantity: 1,
+        stockId: 1,
+    }
+
+    const purchaseItem2: PurchaseItem = {
+        partialPrice: 0,
+        quantity: 1,
+        stockId: 2,
+    }
+
+    const purchaseOrder1: PurchaseOrder = {
+        transactionId: 1,
+        madeOn: Date.now(),
+        purchaseItems: [purchaseItem1, purchaseItem2],
+        totalPrice: 0,
+    }
+
+    const purchaseOrder2: PurchaseOrder = {
+        transactionId: 1,
+        madeOn: Date.now(),
+        purchaseItems: [purchaseItem1],
+        totalPrice: 0,
+    }
 
     beforeAll(async () => {
         const serv = app;
@@ -211,6 +236,9 @@ describe('Users page controller ', () => {
         const server = http.createServer(serv);
         server.listen(3080);
 
+        const ormMock = new MockTypeORM();
+        ormMock.onMock('PurchaseOrder').toReturn([purchaseOrder1, purchaseOrder2], 'find');
+        ormMock.onMock('PurchaseOrder').toReturn(purchaseOrder1, 'findOneBy');
 
     }, 3000);
 
@@ -221,6 +249,7 @@ describe('Users page controller ', () => {
         const body: IPurchaseOrder[] = await response.json();
 
         expect(response.status).toBe(200);
+        expect(body).toEqual([purchaseOrder1, purchaseOrder2]);
     });
 
     test('When GET request to purchaseOrder' +
@@ -230,6 +259,6 @@ describe('Users page controller ', () => {
         const body: IPurchaseOrder = await response.json();
 
         expect(response.status).toBe(200);
-        // expect(body).toContain('respond with a resource');
+        expect(body).toEqual(purchaseOrder1);
     });
 });
