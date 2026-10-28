@@ -1,7 +1,7 @@
 import {beforeAll, describe, expect, test} from 'vitest'
 import app from "../app";
 import http from "http";
-import {IPurchaseOrder, IRequisition, IStockItem, IWarehouse} from "../models/warehouseTypes";
+import {IPurchaseOrder, IRequisition, IStockItem, IWarehouse, Requisition} from "../models/warehouseTypes";
 import {Warehouse} from "../persistence/entities";
 import {MockTypeORM} from 'mock-typeorm'
 
@@ -114,12 +114,31 @@ describe('Requisitions page controller ', () => {
     const requisitionsUrl = `http://localhost:3060/requisitions`;
     const requisitionUrlPrefix = `http://localhost:3060/requisition/id/`;
 
+    const requisition1: Requisition = {
+        fulfilledOn: Date.now(),
+        id: 1,
+        requestedStock: [],
+        totalValue: 0
+
+    }
+
+    const requisition2: Requisition = {
+        fulfilledOn: Date.now(),
+        id: 2,
+        requestedStock: [],
+        totalValue: 0
+
+    }
 
     beforeAll(async () => {
         const serv = app;
         app.set('port', 3060);
         const server = http.createServer(serv);
         server.listen(3060);
+
+        const ormMock = new MockTypeORM();
+        ormMock.onMock('Requisition').toReturn([requisition1, requisition2], 'find');
+        ormMock.onMock('Requisition').toReturn(requisition1, 'findOneBy');
 
     }, 3000);
 
@@ -130,7 +149,7 @@ describe('Requisitions page controller ', () => {
         const body: IRequisition[] = await response.json();
 
         expect(response.status).toBe(200);
-        // expect(body).toContain('respond with a resource');
+        expect(body).toEqual([requisition1, requisition2]);
 
     });
 
@@ -141,11 +160,11 @@ describe('Requisitions page controller ', () => {
         const body: IRequisition = await response.json();
 
         expect(response.status).toBe(200);
-        // expect(body).toContain('respond with a resource');
+        expect(body).toEqual(requisition1);
     });
 });
 
-describe('Stock irem', () => {
+describe('Stock item', () => {
     let response: Response;
     const stockItemsUrl = `http://localhost:3070/stock-items`;
     const stockItemUrlPrefix = `http://localhost:3070/stock-item/id/`;
