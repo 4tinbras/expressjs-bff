@@ -30,9 +30,8 @@ const server = http.createServer(app);
  */
 
 myDataSource.initialize().then(async () => {
-  server.listen(3030)
+  server.listen(port)
 })
-// server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
