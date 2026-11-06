@@ -4,16 +4,7 @@ import express, {type Request, type Response} from 'express';
 import {myDataSource} from "../database/app-data-source"
 import {Warehouse} from "../persistence/entities";
 
-try {
-    // @ts-ignore
-    await myDataSource.initialize()
-    console.log("Data Source has been initialized!")
-} catch (error) {
-    console.error("Error during Data Source initialization:", error)
-}
-
 const router = express.Router();
-
 
 
 /* GET users listing. */

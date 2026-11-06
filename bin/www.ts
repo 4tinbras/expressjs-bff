@@ -5,9 +5,11 @@
  */
 
 import app from '../app';
-const debug = require('debug')('express-bff:server');
 import http from 'http';
-import router from "../routes";
+import {myDataSource} from "../database/app-data-source";
+
+const debug = require('debug')('express-bff:server');
+
 
 /**
  * Get port from environment and store in Express.
@@ -27,7 +29,9 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+myDataSource.initialize().then(async () => {
+  server.listen(port)
+})
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -91,5 +95,6 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
 
 export default server;
